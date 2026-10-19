@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# Allow the example environment template
+!.env.example
+
+# ML artifacts and datasets
+*.parquet
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.ckpt
+*.joblib
+*.onnx
+data_and_ml/data/
+data_and_ml/artifacts/
+data_and_ml/outputs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+frontend/.env
+
+# Django
+backend/db.sqlite3
+backend/staticfiles/
+backend/media/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
