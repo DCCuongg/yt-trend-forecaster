@@ -139,9 +139,78 @@ frontend/
         ├── App.jsx                   # Component gốc chứa Router
         └── main.jsx                  # Điểm khởi chạy React DOM
 ```
-# Các bước triển khai dự án.
+# Triển khai dự án.
+## Nguồn tài nguyên dể triển khai.
 
+### 1. Dataset Context (`cuongduongok/yt-trend-forecaster-gold-data`)
+
+
+
+* **Link:** `[https://huggingface.co/datasets/cuongduongok/yt-trend-forecaster-gold-data](https://huggingface.co/datasets/cuongduongok/yt-trend-forecaster-gold-data)`
+
+
+* **File chính:** `gold_topic_timeseries.parquet` (2.39 MB, 80,726 dòng)
+
+
+* **Schema dữ liệu:**
+* `ds` (`timestamp[ns]`): Thời gian theo ngày (từ 12/10/2024 đến 19/10/2026).
+
+
+* `topic_name` (`string`): Tên chủ đề/từ khóa (116 classes, e.g., *Autos & Vehicles*, *Gaming*, *roblox*, *gta 5*,...).
+
+
+* `topic_type` (`string`): Phân loại topic (2 classes, e.g., `CATEGORY`,...).
+
+
+* `total_views` (`int64`): Tổng lượt xem trong ngày.
+
+
+* `total_likes` (`int64`): Tổng lượt like.
+
+
+* `total_comments` (`int64`): Tổng số bình luận.
+
+
+* `trending_video_count` (`int64`): Số lượng video lọt top trending.
+
+
+* `total_country_appearances` (`int64`): Số lượt xuất hiện theo quốc gia.
+* `engagement_rate` (`float64`): Tỷ lệ tương tác.
+
+
+---
+
+### 2. Model Context (`cuongduongok/yt-trend-forecaster-models`)
+
+
+
+* **Link:** `[https://huggingface.co/cuongduongok/yt-trend-forecaster-models](https://huggingface.co/cuongduongok/yt-trend-forecaster-models)`
+
+
+* **File chính:**
+* `lgbm_trend_forecaster_14day.pkl` (885 kB): Model LightGBM dự báo xu hướng 14 ngày.
+
+
+* `model_metadata.json`: Định nghĩa feature, mapping dictionary và metrics.
+
+
+
+
+* **Input Features Interface (`feature_columns` - 22 features theo thứ tự):**
+1. `topic_id`: Integer map từ `topic_to_id` (0 đến 114) trong `model_metadata.json`.
+2. **Lag features (views):** `lag_1`, `lag_2`, `lag_3`, `lag_7`, `lag_14`, `lag_21`, `lag_30`.
+3. **Rolling statistics (views):** `rolling_mean_7`, `rolling_std_7`, `rolling_mean_14`, `rolling_mean_30`, `rolling_max_7`.
+4. **Momentum & Supply:** `velocity_3d`, `momentum_ratio_7_30`, `video_supply_lag_1`.
+5. **Time features:** `day_of_week`, `is_weekend`, `sin_week`, `cos_week`, `sin_year`, `cos_year`.
+
+
+* **Output:** Dự báo views/trend chỉ số trong 14 ngày kế tiếp (MAE: ~4.74M, MAPE: ~17.09%).
+
+## Các bước thực hiện.
+## Các bài toán và quyết định chính sách.
+
+        Sử dụng SQLPostgre lưu cả dữ liệu có cấu trúc và Kết quả json của models vì nền tảng có hỗ trợ.
 # Hướng dẩn cài đặt, chính sách và môi trường
 
-## Khởi tại dựa án
+## Chạy dự án.
 
